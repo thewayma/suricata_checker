@@ -1,9 +1,9 @@
 package g
 
 import (
-	"github.com/garyburd/redigo/redis"
 	"log"
 	"time"
+	"github.com/garyburd/redigo/redis"
 )
 
 var RedisConnPool *redis.Pool

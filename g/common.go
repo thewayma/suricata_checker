@@ -1,6 +1,10 @@
 package g
 import (
-   "fmt"
+    "io"
+    "fmt"
+    "sort"
+    "strings"
+    "crypto/md5"
 )
 
 type Strategy struct {
@@ -76,3 +80,89 @@ func (this *Event) String() string {
     )
 }
 
+func (this *Event) Priority() int {
+    if this.Strategy != nil {
+        return this.Strategy.Priority
+    }
+    return 1
+}
+
+type JudgeItem struct {
+    Endpoint  string            `json:"endpoint"`
+    Metric    string            `json:"metric"`
+    Value     float64           `json:"value"`
+    Timestamp int64             `json:"timestamp"`
+    JudgeType string            `json:"judgeType"`
+    Tags      map[string]string `json:"tags"`
+}
+
+func (this *JudgeItem) String() string {
+    return fmt.Sprintf("<Endpoint:%s, Metric:%s, Value:%f, Timestamp:%d, JudgeType:%s Tags:%v>",
+        this.Endpoint,
+        this.Metric,
+        this.Value,
+        this.Timestamp,
+        this.JudgeType,
+        this.Tags)
+}
+
+func sortedTags(tags map[string]string) string {
+    if tags == nil {
+        return ""
+    }
+
+    size := len(tags)
+
+    if size == 0 {
+        return ""
+    }
+
+    if size == 1 {
+        for k, v := range tags {
+            return fmt.Sprintf("%s=%s", k, v)
+        }
+    }
+
+    keys := make([]string, size)
+    i := 0
+    for k := range tags {
+        keys[i] = k
+        i++
+    }
+
+    sort.Strings(keys)
+
+    ret := make([]string, size)
+    for j, key := range keys {
+        ret[j] = fmt.Sprintf("%s=%s", key, tags[key])
+    }
+
+    return strings.Join(ret, ",")
+}
+
+func Md5(raw string) string {
+    h := md5.New()
+    io.WriteString(h, raw)
+
+    return fmt.Sprintf("%x", h.Sum(nil))
+}
+
+func (r *JudgeItem) PK() string {
+    tags     := r.Tags
+    endpoint := r.Endpoint
+    metric   := r.Metric
+
+    if tags == nil || len(tags) == 0 {
+        return fmt.Sprintf("%s/%s", endpoint, metric)
+    }
+    return fmt.Sprintf("%s/%s/%s", endpoint, metric, sortedTags(tags))
+}
+
+func (this *JudgeItem) PrimaryKey() string {
+    return Md5(this.PK())
+}
+
+type HistoryData struct {
+    Timestamp int64   `json:"timestamp"`
+    Value     float64 `json:"value"`
+}
