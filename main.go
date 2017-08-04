@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
     "github.com/thewayma/suricata_checker/g"
+    "github.com/thewayma/suricata_checker/rpc"
     _"github.com/thewayma/suricata_checker/check"
 )
 
@@ -14,9 +15,8 @@ func main() {
 	g.InitRedisConnPool()
 	g.InitHbsClient()
 
-
+    go rpc.Start()
     /*
-	go rpc.Start()
 	go cron.SyncStrategies()
 	go cron.CleanStale()
     */
