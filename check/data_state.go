@@ -76,14 +76,14 @@ func (this *JudgeItemMap) PushFrontAndMaintain(key string, val *g.JudgeItem, max
 	if linkedList, exists := this.Get(key); exists {
 		needJudge := linkedList.PushFrontAndMaintain(val, maxCount)
 		if needJudge {
-			//Judge(linkedList, val, now)
+			Judge(linkedList, val, now)
 		}
 	} else {
 		NL := list.New()
 		NL.PushFront(val)
 		safeList := &SafeLinkedList{L: NL}
 		this.Set(key, safeList)
-		//Judge(safeList, val, now)
+		Judge(safeList, val, now)
 	}
 }
 

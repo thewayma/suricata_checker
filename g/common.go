@@ -7,6 +7,12 @@ import (
     "crypto/md5"
 )
 
+// code == 0 => success
+// code == 1 => bad request
+type SimpleRpcResponse struct {
+    Code int `json:"code"`
+}
+
 type Strategy struct {
     Id         int               `json:"id"`
     Metric     string            `json:"metric"`
