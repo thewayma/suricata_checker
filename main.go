@@ -12,14 +12,13 @@ func main() {
 	flag.Parse()
 
 	g.ParseConfig(*cfg)
+    g.InitLog()
 	g.InitRedisConnPool()
 	g.InitHbsClient()
 
     go rpc.Start()
-    /*
-	go cron.SyncStrategies()
-	go cron.CleanStale()
-    */
+	//go cron.SyncStrategies()
+	//go cron.CleanStale()
 
 	select {}
 }

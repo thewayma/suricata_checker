@@ -2,7 +2,6 @@ package check
 
 import (
 	"fmt"
-	"log"
 	"encoding/json"
 	"github.com/thewayma/suricata_checker/g"
 )
@@ -43,7 +42,7 @@ func CheckStrategy(L *SafeLinkedList, firstItem *g.JudgeItem, now int64) {
 func judgeItemWithStrategy(L *SafeLinkedList, strategy g.Strategy, firstItem *g.JudgeItem, now int64) {
 	fn, err := ParseFuncFromString(strategy.Func, strategy.Operator, strategy.RightValue)
 	if err != nil {
-		log.Printf("[ERROR] parse func %s fail: %v. strategy id: %d", strategy.Func, err, strategy.Id)
+		g.Log.Error("[ERROR] parse func %s fail: %v. strategy id: %d", strategy.Func, err, strategy.Id)
 		return
 	}
 
@@ -70,7 +69,7 @@ func sendEvent(event *g.Event) {
 
 	bs, err := json.Marshal(event)
 	if err != nil {
-		log.Printf("json marshal event %v fail: %v", event, err)
+		g.Log.Error("json marshal event %v fail: %v", event, err)
 		return
 	}
 

@@ -7,6 +7,11 @@ import (
 	"github.com/toolkits/file"
 )
 
+type LogConfig struct {
+    LogLevel string
+    Output   string
+}
+
 type HttpConfig struct {
 	Enabled bool   `json:"enabled"`
 	Listen  string `json:"listen"`
@@ -42,6 +47,7 @@ type GlobalConfig struct {
 	Debug     bool         `json:"debug"`
 	DebugHost string       `json:"debugHost"`
 	Remain    int          `json:"remain"`
+    Log       *LogConfig   `json:"log"`
 	Http      *HttpConfig  `json:"http"`
 	Rpc       *RpcConfig   `json:"rpc"`
 	Hbs       *HbsConfig   `json:"hbs"`

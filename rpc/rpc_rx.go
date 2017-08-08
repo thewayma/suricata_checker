@@ -36,7 +36,7 @@ func Start() {
     if err != nil {
         log.Fatalf("listen %s fail: %s", addr, err)
     } else {
-        log.Println("rpc listening", addr)
+        g.Log.Trace("checker <= transporter, rpc listening=%v", addr)
     }
 
     rpc.Register(new(Judge))
@@ -44,7 +44,7 @@ func Start() {
     for {
         conn, err := listener.Accept()
         if err != nil {
-            log.Printf("listener.Accept occur error: %s", err)
+            g.Log.Error("checker <= transporter, listener.Accept occur error: %s", err)
             continue
         }
         go rpc.ServeConn(conn)
